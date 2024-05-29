@@ -31,7 +31,7 @@ export class HomePage implements OnInit {
     const view = new MapView({
       container: "container",
       map: map,
-      zoom: 4,
+      zoom: 5,
       center: [this.longitude, this.latitude],
     })
   }
