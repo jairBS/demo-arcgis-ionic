@@ -3,12 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'io.ionic.starter',
   appName: 'proyecto-ionic',
-  webDir: 'www',
-  plugins: {
-    CapacitorHttp: {
-      enabled: true,
-    },
-  },
+  webDir: 'www'
 };
 
 export default config;
