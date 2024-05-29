@@ -25,7 +25,7 @@ export class HomePage implements OnInit {
     this.longitude = position.coords.longitude;
 
     const map = new Map({
-      basemap: "topo-vector"
+      basemap: "topo-vector" // hybrid
     });
 
     const view = new MapView({
