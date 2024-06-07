@@ -1,3 +1,14 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <app-menu></app-menu>
+
+  <div class="ion-page" id="main-content">
+    <app-header></app-header>
+
+
+    <ion-content class="ion-padding">
+      <ion-router-outlet></ion-router-outlet>
+    </ion-content>
+
+    <app-footer></app-footer>
+</div>
 </ion-app>
