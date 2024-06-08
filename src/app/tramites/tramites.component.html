@@ -1,5 +1,11 @@
   <ion-content class="ion-padding">
 
+    <ul>
+      <li *ngFor="let item of todoList">
+        {{ item.nombre }}  - {{ item.descripcion }}
+      </li>
+    </ul>
+
     <ion-button  size="small"
     fill="clear" (click)="setOpen(true)">Abrir formulario</ion-button>
     <ion-modal [isOpen]="isModalOpen">
@@ -35,7 +41,7 @@
         <!-- (click)="emitTramite()" -->
         <ion-button expand="full"
         fill="solid" (click)="emitTramite()">Agregar</ion-button>
-        {{ tramite | json }}
+        <!-- {{ tramite | json }} -->
 
         </ion-content>
 
