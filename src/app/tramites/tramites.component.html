@@ -1,88 +1,82 @@
-  <ion-content class="ion-padding" color="light">
-    <ion-grid>
-      <ion-row class="ion-justify-content-start">
-        <ion-col size="12">
-          <ion-button  size="small"
-          fill="clear" (click)="setOpen(true)">Agregar trámite</ion-button>
-          <ion-button size="small" color="medium" id="present-alert"
-              fill="clear" (click)="checkNetworkStatus()">Sicronizar datos</ion-button>
-        </ion-col>
-        <!-- <ion-col size="2">
-          <ion-button size="small" color="medium" id="present-alert"
-              fill="solid" (click)="checkNetworkStatus()">Sicronizar datos</ion-button>
-        </ion-col> -->
-      </ion-row>
-      <ion-row class="ion-justify-content-start">
-        <ion-col size="12">
-            <ion-list [inset]="true">
-              <ion-item *ngFor="let item of todoList">
-                <ion-label> Nombre: {{ item.nombre }} </ion-label>
-                <ion-label> Descripcion: {{ item.descripcion }} </ion-label>
-              </ion-item>
-            </ion-list>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
+<ion-content class="ion-padding" color="light">
+  <ion-grid>
+    <ion-row class="ion-justify-content-start">
+      <ion-col size="12">
+        <ion-button
+          size="small"
+          fill="clear"
+          (click)="setOpen(true)"
+        >
+          Agregar trámite
+        </ion-button>
+
+        <ion-button
+          size="small"
+          color="medium"
+          id="present-alert"
+          fill="clear"
+          (click)="checkNetworkStatus()"
+        >
+          Sicronizar datos
+        </ion-button>
+      </ion-col>
+    </ion-row>
+
+    <ion-row class="ion-justify-content-start">
+      <ion-col size="12">
+        <ion-list [inset]="true">
+          <ion-item *ngFor="let item of todoList">
+            <ion-label> Nombre: {{ item.nombre }} </ion-label>
+            <ion-label> Descripcion: {{ item.descripcion }} </ion-label>
+          </ion-item>
+        </ion-list>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
 
 
+  <ion-modal [isOpen]="isModalOpen">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Agregar trámite</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpen(false)">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
 
-
-
-    <ion-modal [isOpen]="isModalOpen">
-      <ng-template>
-        <ion-header>
-          <ion-toolbar>
-            <ion-title>Agregar trámite</ion-title>
-            <ion-buttons slot="end">
-              <ion-button (click)="setOpen(false)">Cerrar</ion-button>
-            </ion-buttons>
-          </ion-toolbar>
-        </ion-header>
-        <ion-content class="ion-padding">
-          <ion-item>
-            <ion-input
+      <ion-content class="ion-padding">
+        <ion-item>
+          <ion-input
             [(ngModel)]="tramite.nombre"
             class="ion-margin-bottom"
-              labelPlacement="stacked"
-              type="text"
-              placeholder="Nombre"
-            ></ion-input>
-          </ion-item>
-          <ion-item>
-            <ion-input
+            labelPlacement="stacked"
+            type="text"
+            placeholder="Nombre"
+          ></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-input
             [(ngModel)]="tramite.descripcion"
             class="ion-margin-bottom"
             labelPlacement="stacked"
             type="text"
             placeholder="Descripción"
           ></ion-input>
-          </ion-item>
+        </ion-item>
+
         <br>
-        <!-- (click)="emitTramite()" -->
-        <ion-button expand="full"
-        fill="solid" (click)="emitTramite()">Agregar</ion-button>
 
-
-        <!-- <ion-button  id="present-alert" (click)="setOpenDialogConnection(true)">Click Me</ion-button> -->
-        <!-- <ion-alert
-          [isOpen]="isAlertOpen"
-          trigger="present-alert"
-          header="Estatus de conexión"
-          message="¡No es posible realizar la sincronización de datos, verifique su conexión a internet!"
-          [buttons]="alertButtons"
-          (didDismiss)="setOpenDialogConnection(false)"
-        ></ion-alert> -->
-
-
-        <!-- {{ tramite | json }} -->
-
-        <!-- estas conectado? {{ networkStatus?.connected }} <br>
-        tu tipo de conexion es: {{ networkStatus?.connectionType }} -->
-
-        </ion-content>
-
-      </ng-template>
-
-    </ion-modal>
-
-  </ion-content>
+        <ion-button
+          expand="full"
+          fill="solid"
+          (click)="emitTramite()"
+        >
+          Agregar
+        </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+</ion-content>
