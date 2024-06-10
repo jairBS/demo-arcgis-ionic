@@ -34,6 +34,7 @@ export class TodoListService {
 }
 
   getTodoList() {
+    console.log("GET", this.storage.get());
     return this.storage.get();
   }
 }

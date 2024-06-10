@@ -6,19 +6,37 @@
 
   </ion-toolbar>
   <ion-content class="ion-padding">
-    <ion-button
+    <ion-menu-toggle>
+      <ion-button
+      routerLink="/tramites"
+        expand="full"
+        fill="clear"
+      >
+        Trámites
+      </ion-button>
+    </ion-menu-toggle>
+    <!-- <ion-button
     routerLink="/tramites"
       expand="full"
       fill="clear"
     >
       Trámites
-    </ion-button>
-    <ion-button
+    </ion-button> -->
+    <ion-menu-toggle>
+      <ion-button
       routerLink="/visor"
       expand="full"
       fill="clear"
     >
       Visor Geográfico
     </ion-button>
+    </ion-menu-toggle>
+    <!-- <ion-button
+      routerLink="/visor"
+      expand="full"
+      fill="clear"
+    >
+      Visor Geográfico
+    </ion-button> -->
   </ion-content>
 </ion-menu>
