@@ -95,7 +95,7 @@ export class TramitesComponent implements OnInit  {
     descripcion: '',
   }
 
-  public elItem: Tramite = {
+  public itemSelected: Tramite = {
     id: null,
     nombre: '',
     descripcion: ''
@@ -103,11 +103,14 @@ export class TramitesComponent implements OnInit  {
 
   emitTramite():void {
     if(this.tramite.id) {
-      this.todoList = this.todoListService.editItem(this.elItem,{
-        id: this.tramite.id,
-        nombre: this.tramite.nombre,
-        descripcion: this.tramite.descripcion
-      })
+      this.todoList = this.todoListService.editItem(this.itemSelected,
+        // data actualizada
+        {
+          id: this.tramite.id,
+          nombre: this.tramite.nombre,
+          descripcion: this.tramite.descripcion
+        }
+      );
     } else {
       this.addItem(this.tramite);
     }
@@ -131,7 +134,7 @@ export class TramitesComponent implements OnInit  {
   setData(item: Tramite) {
     this.isModalOpen = true;
     this.tramite = { ...item };
-    this.elItem = item
+    this.itemSelected = item;
   }
 
   deleteItem(item: Tramite) {
