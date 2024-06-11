@@ -32,6 +32,7 @@ export class TodoListStorageService {
   }
 
   private findItemIndex(item: any) {
+    console.log("indice", this.todoList.indexOf(item));
     return this.todoList.indexOf(item);
   }
 

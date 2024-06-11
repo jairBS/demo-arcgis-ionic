@@ -34,7 +34,12 @@ export class TramitesComponent implements OnInit  {
   }
 
   setOpen(isOpen: boolean) {
+
     this.isModalOpen = isOpen;
+
+      this.tramite.nombre = '';
+    this.tramite.descripcion = '';
+
   }
 
   setOpenDialogConnection(isOpen: boolean) {
@@ -88,8 +93,24 @@ export class TramitesComponent implements OnInit  {
     descripcion: '',
   }
 
+  public elItem: Tramite = {
+    id: null,
+    nombre: '',
+    descripcion: ''
+  }
+
   emitTramite():void {
-    this.addItem(this.tramite);
+    //console.log("click");
+    if(this.tramite.id) {
+      this.todoList = this.todoListService.editItem(this.elItem,{
+        id: this.tramite.id,
+        nombre: this.tramite.nombre,
+        descripcion: this.tramite.descripcion
+      })
+    } else {
+      console.log("GUARDA");
+      this.addItem(this.tramite);
+    }
 
     this.tramite.nombre = '';
     this.tramite.descripcion = '';
@@ -106,6 +127,13 @@ export class TramitesComponent implements OnInit  {
       nombre,
       descripcion,
     });
+  }
+
+  setData(item: Tramite) {
+
+    this.isModalOpen = true;
+    this.tramite = { ...item };
+    this.elItem = item
   }
 
   deleteItem(item: Tramite) {
