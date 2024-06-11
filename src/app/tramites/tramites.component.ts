@@ -83,6 +83,7 @@ export class TramitesComponent implements OnInit  {
 
   // para ng model
   public tramite: Tramite = {
+    id: null,
     nombre: '',
     descripcion: '',
   }
@@ -101,9 +102,16 @@ export class TramitesComponent implements OnInit  {
     const { nombre, descripcion } = item;
 
     this.todoList = this.todoListService.addItem({
+      id:  Math.floor(Math.random() * 10000),
       nombre,
       descripcion,
     });
+  }
+
+  deleteItem(item: Tramite) {
+    if(item.id) {
+      this.todoList = this.todoListService.deleteItem(item);
+    }
   }
 
 }

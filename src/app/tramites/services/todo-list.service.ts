@@ -10,6 +10,10 @@ export class TodoListService {
     return this.storage.post(item);
   }
 
+  deleteItem(item:any) {
+    return this.storage.destroy(item);
+  }
+
   getTodoList() {
     return this.storage.get();
   }
