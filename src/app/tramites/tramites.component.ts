@@ -17,6 +17,8 @@ import { Tramite } from './interfaces/tramite.interface';
 export class TramitesComponent implements OnInit  {
   isAlertOpen = false;
   isModalOpen = false;
+  titleModal = "Agregar trámite";
+  titleButton = "Agregar";
   alertButtons = ['Aceptar'];
 
   constructor(
@@ -36,6 +38,8 @@ export class TramitesComponent implements OnInit  {
   setOpen(isOpen: boolean) {
     this.isModalOpen = isOpen;
     this.clearData();
+    this.titleModal = "Agregar trámite";
+    this.titleButton = "Agregar";
   }
 
   clearData() {
@@ -132,6 +136,8 @@ export class TramitesComponent implements OnInit  {
   }
 
   setData(item: Tramite) {
+    this.titleModal = "Editar trámite";
+    this.titleButton = "Editar";
     this.isModalOpen = true;
     this.tramite = { ...item };
     this.itemSelected = item;

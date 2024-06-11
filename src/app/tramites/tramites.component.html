@@ -41,7 +41,7 @@
     <ng-template>
       <ion-header>
         <ion-toolbar>
-          <ion-title>Agregar trámite</ion-title>
+          <ion-title>{{ titleModal }}</ion-title>
           <ion-buttons slot="end">
             <ion-button (click)="setOpen(false)">Cerrar</ion-button>
           </ion-buttons>
@@ -76,7 +76,7 @@
           fill="solid"
           (click)="emitTramite()"
         >
-          Agregar
+          {{ titleButton }}
         </ion-button>
       </ion-content>
     </ng-template>
