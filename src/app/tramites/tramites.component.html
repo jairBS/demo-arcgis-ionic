@@ -30,6 +30,7 @@
             <ion-label> Descripcion: {{ item.descripcion }} </ion-label>
             <ion-button (click)="setData(item)">Editar</ion-button>
             <ion-button color="danger" (click)="deleteItem(item)">Eliminar</ion-button>
+            <ion-button (click)="setOpenFoto(true, item.id)">Foto</ion-button>
           </ion-item>
         </ion-list>
       </ion-col>
@@ -78,6 +79,37 @@
         >
           {{ titleButton }}
         </ion-button>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+  <ion-modal [isOpen]="isModalOpenFoto">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Evidencia de trámite</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenFoto(false)">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <!-- {{ arrayPhotos | json }}  --------------- {{ todoList | json }} -->
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6" *ngFor="let photo of photoService.photos; index as position">
+              <ion-img [src]="photo.webviewPath"></ion-img>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-fab vertical="bottom" horizontal="center" slot="fixed"  class="ion-margin-bottom">
+          <ion-fab-button (click)="addPhotoToGallery()">
+            <ion-icon name="camera"></ion-icon>
+          </ion-fab-button>
+        </ion-fab>
       </ion-content>
     </ng-template>
   </ion-modal>

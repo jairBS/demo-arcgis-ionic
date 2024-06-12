@@ -4,6 +4,7 @@ import { AlertController, LoadingController } from '@ionic/angular';
 // Services.
 import { TodoListService } from './services/todo-list.service';
 import { CheckNetworkService } from './services/check-network.service';
+import { PhotosService } from './services/photos.service';
 
 // Interfaces.
 import { Tramite } from './interfaces/tramite.interface';
@@ -17,6 +18,7 @@ import { Tramite } from './interfaces/tramite.interface';
 export class TramitesComponent implements OnInit  {
   isAlertOpen = false;
   isModalOpen = false;
+  isModalOpenFoto = false;
   titleModal = "Agregar trámite";
   titleButton = "Agregar";
   alertButtons = ['Aceptar'];
@@ -26,13 +28,18 @@ export class TramitesComponent implements OnInit  {
     private checkNetworkService: CheckNetworkService,
     private alertController: AlertController,
     private loadingCtrl: LoadingController,
+    public photoService: PhotosService,
   ) { }
 
   public todoList: any;
   public networkStatus: any;
+  public idTramite:number = 0;
 
-  ngOnInit() {
+  async ngOnInit() {
     this.todoList = this.todoListService.getTodoList();
+    let a = this.photoService.photos;
+    console.log("a",a );
+    await this.photoService.loadSaved();
   }
 
   setOpen(isOpen: boolean) {
@@ -147,6 +154,19 @@ export class TramitesComponent implements OnInit  {
     if(item.id) {
       this.todoList = this.todoListService.deleteItem(item);
     }
+  }
+
+  setOpenFoto(isOpen: boolean,id_tramite:number = 0) {
+    this.isModalOpenFoto = isOpen;
+    if(id_tramite !== 0) {
+      this.idTramite = id_tramite;
+    }
+
+  }
+
+  async addPhotoToGallery() {
+    console.log("id del tramite", this.idTramite);
+    await this.photoService.addNewToGallery(this.idTramite); // mandar id
   }
 
 }

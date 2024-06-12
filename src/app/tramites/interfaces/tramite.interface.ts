@@ -3,3 +3,10 @@ export interface Tramite {
   nombre: string;
   descripcion: string;
 }
+
+
+export interface TramitePhoto {
+  id_tramite: number;
+  filepath: string;
+  webviewPath?: string;
+}

@@ -12,10 +12,11 @@ import { HeaderModule } from './components/header/header.module';
 
 import { TodoListService } from './tramites/services/todo-list.service';
 import { TodoListStorageService } from './tramites/services/todo-list-storage.service';
+import { PhotosService } from './tramites/services/photos.service';
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MenuModule, HeaderModule, FooterModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, TodoListService, TodoListStorageService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, TodoListService, TodoListStorageService, PhotosService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
