@@ -19,6 +19,8 @@
         >
           Sicronizar datos
         </ion-button>
+        <ion-button  size="small"
+        fill="clear" (click)="setOpenFoto(true)">Foto</ion-button>
       </ion-col>
     </ion-row>
 
@@ -30,7 +32,6 @@
             <ion-label> Descripcion: {{ item.descripcion }} </ion-label>
             <ion-button (click)="setData(item)">Editar</ion-button>
             <ion-button color="danger" (click)="deleteItem(item)">Eliminar</ion-button>
-            <ion-button (click)="setOpenFoto(true, item.id)">Foto</ion-button>
           </ion-item>
         </ion-list>
       </ion-col>

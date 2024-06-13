@@ -156,11 +156,11 @@ export class TramitesComponent implements OnInit  {
     }
   }
 
-  setOpenFoto(isOpen: boolean,id_tramite:number = 0) {
+  setOpenFoto(isOpen: boolean/*,id_tramite:number = 0*/) {
     this.isModalOpenFoto = isOpen;
-    if(id_tramite !== 0) {
+    /*if(id_tramite !== 0) {
       this.idTramite = id_tramite;
-    }
+    }*/
 
   }
 

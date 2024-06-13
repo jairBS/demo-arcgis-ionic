@@ -6,7 +6,7 @@ export interface Tramite {
 
 
 export interface TramitePhoto {
-  id_tramite: number;
+  //id_tramite: number;
   filepath: string;
   webviewPath?: string;
 }
