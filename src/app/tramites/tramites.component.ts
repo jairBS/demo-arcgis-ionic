@@ -37,8 +37,8 @@ export class TramitesComponent implements OnInit  {
 
   async ngOnInit() {
     this.todoList = this.todoListService.getTodoList();
-    let a = this.photoService.photos;
-    console.log("a",a );
+    // TODO: para que el usuario navegue por primera vez todas las fotos se carguen y se muestren en
+    // pantalla
     await this.photoService.loadSaved();
   }
 
@@ -156,17 +156,13 @@ export class TramitesComponent implements OnInit  {
     }
   }
 
-  setOpenFoto(isOpen: boolean/*,id_tramite:number = 0*/) {
+  setOpenFoto(isOpen: boolean) {
     this.isModalOpenFoto = isOpen;
-    /*if(id_tramite !== 0) {
-      this.idTramite = id_tramite;
-    }*/
-
   }
 
   async addPhotoToGallery() {
-    console.log("id del tramite", this.idTramite);
-    await this.photoService.addNewToGallery(this.idTramite); // mandar id
+    //await this.photoService.addNewToGallery(); // mandar id
+    this.photoService.addNewToGallery();
   }
 
 }
