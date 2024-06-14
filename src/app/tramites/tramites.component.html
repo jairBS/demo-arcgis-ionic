@@ -30,8 +30,15 @@
           <ion-item *ngFor="let item of todoList">
             <ion-label> Nombre: {{ item.nombre }} </ion-label>
             <ion-label> Descripcion: {{ item.descripcion }} </ion-label>
-            <ion-button (click)="setData(item)">Editar</ion-button>
-            <ion-button color="danger" (click)="deleteItem(item)">Eliminar</ion-button>
+            <ion-label>
+              <ion-button (click)="setData(item)">
+                <ion-icon name="pencil-outline"></ion-icon>
+              </ion-button>
+              <ion-button color="danger" (click)="deleteItem(item)">
+                <ion-icon name="trash-outline"></ion-icon>
+              </ion-button>
+            </ion-label>
+
           </ion-item>
         </ion-list>
       </ion-col>
