@@ -45,11 +45,12 @@ export class PhotosService {
     const base64Data = await this.readAsBase64(photo);
 
     // Write the file to the data directory
+    // TODO: PARA IOS MANEJA EL MISMO DIRECTORI DOCUMENTS?
     const fileName = Date.now() + '.jpeg';
     const savedFile = await Filesystem.writeFile({
       path: fileName,
       data: base64Data,
-      directory: Directory.Data
+      directory: this.platform.is('hybrid') ? Directory.Documents : Directory.Data
     });
 
     if(this.platform.is('hybrid')) {
