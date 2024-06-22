@@ -63,7 +63,13 @@ export class TramitesComponent implements OnInit  {
     const alert = await this.alertController.create({
       header: header,
       message: message,
-      buttons: ['OK']
+      buttons: [/*{
+        text:*/ 'OK',
+        /*handler: () => {
+        // despues de darle ok
+          this.test();
+        }
+      }*/]
     });
 
     await alert.present();
@@ -97,6 +103,11 @@ export class TramitesComponent implements OnInit  {
         '¡Datos sincronizados con éxito!',
        `Total de datos sincronizados: ${this.todoList.length} de ${this.todoList.length}`
     );
+
+    // TODO: BORRAR LOCALSTORAGE PORQUE YA SE SINCRONIZO
+    //localStorage.clear();
+    // refrescar registros
+    //this.todoList = [];
   }
 
   // para ng model
@@ -151,9 +162,7 @@ export class TramitesComponent implements OnInit  {
   }
 
   deleteItem(item: Tramite) {
-    if(item.id) {
-      this.todoList = this.todoListService.deleteItem(item);
-    }
+    this.todoList = this.todoListService.deleteItem(item);
   }
 
   setOpenFoto(isOpen: boolean) {

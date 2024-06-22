@@ -27,6 +27,9 @@
     <ion-row class="ion-justify-content-start">
       <ion-col size="12">
         <ion-list [inset]="true">
+          <ion-item *ngIf="todoList.length === 0">
+            <ion-label class="ion-text-center">Sin datos.</ion-label>
+          </ion-item>
           <ion-item *ngFor="let item of todoList">
             <ion-label> Nombre: {{ item.nombre }} </ion-label>
             <ion-label> Descripcion: {{ item.descripcion }} </ion-label>

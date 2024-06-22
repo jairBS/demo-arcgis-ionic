@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 
 const storageName = 'tramites';
 
-const defaultList = [
-  { nombre: 'tramite 0', descripcion: 'descripcion 0' }
-];
+// const defaultList = [
+//   { nombre: 'tramite 0', descripcion: 'descridapacion 0' }
+// ];
 
 @Injectable()
 export class TodoListStorageService {
@@ -12,7 +12,7 @@ export class TodoListStorageService {
 
   constructor() {
     const storedTramites = localStorage.getItem(storageName);
-    this.todoList = storedTramites ? JSON.parse(storedTramites) : defaultList;
+    this.todoList = storedTramites ? JSON.parse(storedTramites) : [];
   }
 
    // get items
