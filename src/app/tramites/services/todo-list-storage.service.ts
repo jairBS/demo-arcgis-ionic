@@ -20,6 +20,11 @@ export class TodoListStorageService {
     return [...this.todoList];
   }
 
+  deleteStorageTramites() {
+    localStorage.removeItem(storageName);
+    this.todoList = [];
+  }
+
   private update() {
     localStorage.setItem(storageName, JSON.stringify(this.todoList));
     return this.get();

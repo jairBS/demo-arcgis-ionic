@@ -64,10 +64,10 @@ export class TramitesComponent implements OnInit  {
       header: header,
       message: message,
       buttons: [/*{
-        text:*/ 'OK',
+        text: */'OK',
         /*handler: () => {
         // despues de darle ok
-          this.test();
+
         }
       }*/]
     });
@@ -105,9 +105,10 @@ export class TramitesComponent implements OnInit  {
     );
 
     // TODO: BORRAR LOCALSTORAGE PORQUE YA SE SINCRONIZO
-    //localStorage.clear();
-    // refrescar registros
-    //this.todoList = [];
+    this.todoListService.deletelocalStorageTramites();
+    this.todoList = [];
+
+    this.todoListService.getTodoList();
   }
 
   // para ng model

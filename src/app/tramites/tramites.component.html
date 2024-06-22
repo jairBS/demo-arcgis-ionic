@@ -16,6 +16,7 @@
           id="present-alert"
           fill="clear"
           (click)="checkNetworkStatus()"
+          [disabled]="todoList.length === 0"
         >
           Sicronizar datos
         </ion-button>

@@ -21,4 +21,8 @@ export class TodoListService {
   getTodoList() {
     return this.storage.get();
   }
+
+  deletelocalStorageTramites() {
+    return this.storage.deleteStorageTramites();
+  }
 }
