@@ -5,9 +5,10 @@ import { AlertController, LoadingController } from '@ionic/angular';
 import { TodoListService } from './services/todo-list.service';
 import { CheckNetworkService } from './services/check-network.service';
 import { PhotosService } from './services/photos.service';
+import { ExcelService } from './services/load-excel.service';
 
 // Interfaces.
-import { Tramite } from './interfaces/tramite.interface';
+import { Tramite, TramiteExcel } from './interfaces/tramite.interface';
 @Component({
   selector: 'app-form-tramites',
   templateUrl: 'tramites.component.html',
@@ -19,9 +20,12 @@ export class TramitesComponent implements OnInit  {
   isAlertOpen = false;
   isModalOpen = false;
   isModalOpenFoto = false;
+  isModalOpenExcel = false;
   titleModal = "Agregar trámite";
   titleButton = "Agregar";
   alertButtons = ['Aceptar'];
+  nameTramite = "";
+
 
   constructor(
     private todoListService: TodoListService,
@@ -29,6 +33,7 @@ export class TramitesComponent implements OnInit  {
     private alertController: AlertController,
     private loadingCtrl: LoadingController,
     public photoService: PhotosService,
+    private excelService: ExcelService
   ) { }
 
   public todoList: any;
@@ -170,10 +175,51 @@ export class TramitesComponent implements OnInit  {
     this.isModalOpenFoto = isOpen;
   }
 
+  setOpenExcel(isOpen: boolean) {
+    this.isModalOpenExcel = isOpen;
+  }
+
   async addPhotoToGallery() {
     //await this.photoService.addNewToGallery(); // mandar id
     this.photoService.addNewToGallery();
   }
+
+  // excel
+  setExcel(item: Tramite) {
+    this.isModalOpenExcel = true;
+    this.nameTramite = item.nombre;
+  }
+
+  onFileSelected(event: any) {
+    const file: File = event.target.files[0];
+    if (!file.name.includes('xlsx') || !file.name.includes('xls')) {
+      // mandar notificacion de que debe de ser un excel
+      return;
+    }
+
+    // crear objeto con el nombre y el file
+    const tramiteExcel: TramiteExcel = {
+      nombre_archivo: file.name,
+      nombre_tramite: this.nameTramite,
+      file: file,
+    }
+
+    this.excelService.saveExcelToLocalStorage(tramiteExcel);
+
+    const data = this.excelService.getRecordsExcel();
+    console.log("LA DATA", data);
+  }
+
+
+
+  /*loadExcel(): void {
+    const workbook = this.excelService.loadExcelFromLocalStorage();
+    if(workbook) {
+      console.log("archivo cargado desde local storage", workbook);
+    } else {
+      console.log("no se encontro ningun archivo");
+    }
+  }*/
 
 }
 

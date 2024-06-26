@@ -65,6 +65,9 @@
                   <ion-button color="danger" (click)="deleteItem(item)">
                     <ion-icon name="trash-outline"></ion-icon>
                   </ion-button>
+                  <ion-button color="success" (click)="setExcel(item)">
+                    <ion-icon name="document-text-outline"></ion-icon>
+                  </ion-button>
                 </ion-col>
               </ion-row>
             </ion-grid>
@@ -121,7 +124,7 @@
   </ion-modal>
 
 
-  <ion-modal [isOpen]="isModalOpenFoto">
+  <ion-modal [isOpen]="isModalOpenFoto" backdropDismiss="false">
     <ng-template>
       <ion-header>
         <ion-toolbar>
@@ -147,6 +150,31 @@
             <ion-icon name="camera"></ion-icon>
           </ion-fab-button>
         </ion-fab>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+
+  <!-- EXCEL  -->
+  <ion-modal [isOpen]="isModalOpenExcel" backdropDismiss="false">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar>
+          <ion-title>Cargar excel</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="setOpenExcel(false)">Cerrar</ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding">
+        <ion-grid>
+          <ion-row class="ion-justify-content-start">
+            <ion-col size="10">
+              <ion-input #inputFile id="input-file" type="file" accept=".xlsx,.xls" (change)="onFileSelected($event)"></ion-input>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ion-content>
     </ng-template>
   </ion-modal>
