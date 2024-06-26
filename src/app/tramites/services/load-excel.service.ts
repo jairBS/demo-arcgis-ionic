@@ -18,12 +18,10 @@ export class ExcelService {
   }
 
   saveExcelToLocalStorage(dataExcel: TramiteExcel): void {
-    console.log("EL FILE EN SAVE LOCALSTORAGE", dataExcel);
     const reader = new FileReader();
 
     reader.onload = (event:any) => {
       const data = event.target.result;
-      console.log("data", data);
       const workbook = XLSX.read(data, {
         type: 'binary'
       });
@@ -35,9 +33,6 @@ export class ExcelService {
         nombre_tramite: dataExcel.nombre_tramite,
         fileBinary: binaryString
       };
-
-      console.log("EXCEL DEL TRAMITE", excelDeTramite);
-
 
       this.excelTramitesStorageService.post(excelDeTramite);
     };

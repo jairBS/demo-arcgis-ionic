@@ -25,6 +25,7 @@ export class TramitesComponent implements OnInit  {
   titleButton = "Agregar";
   alertButtons = ['Aceptar'];
   nameTramite = "";
+  fileInput = "";
 
 
   constructor(
@@ -37,11 +38,13 @@ export class TramitesComponent implements OnInit  {
   ) { }
 
   public todoList: any;
+  public listFiles:any;
   public networkStatus: any;
   public idTramite:number = 0;
 
   async ngOnInit() {
     this.todoList = this.todoListService.getTodoList();
+    this.listFiles = this.excelService.getRecordsExcel();
     // TODO: para que el usuario navegue por primera vez todas las fotos se carguen y se muestren en
     // pantalla
     await this.photoService.loadSaved();
@@ -188,12 +191,20 @@ export class TramitesComponent implements OnInit  {
   setExcel(item: Tramite) {
     this.isModalOpenExcel = true;
     this.nameTramite = item.nombre;
+
+    if(this.isModalOpenExcel) {
+      this.listFiles = this.excelService
+                        .getRecordsExcel()
+                        .filter((data:any) => data.nombre_tramite === this.nameTramite);
+    }
   }
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (!file.name.includes('xlsx') || !file.name.includes('xls')) {
       // mandar notificacion de que debe de ser un excel
+      this.presentAlert('Debe de cargar un archivo con extensión xlsx ó xls','');
+      this.fileInput = "";
       return;
     }
 
@@ -205,9 +216,9 @@ export class TramitesComponent implements OnInit  {
     }
 
     this.excelService.saveExcelToLocalStorage(tramiteExcel);
+    this.presentAlert('Archivo guardado con éxito','');
+    this.fileInput = "";
 
-    const data = this.excelService.getRecordsExcel();
-    console.log("LA DATA", data);
   }
 
 
