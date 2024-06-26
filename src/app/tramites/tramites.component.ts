@@ -221,6 +221,16 @@ export class TramitesComponent implements OnInit  {
 
   }
 
+  downloadExcel(item: any) {
+    const dataFile: TramiteExcel = {
+      nombre_tramite: item.nombre_tramite,
+      nombre_archivo: item.nombre_archivo,
+      file: item.fileBinary,
+    };
+
+    this.excelService.downloadExcel(dataFile);
+  }
+
 
 
   /*loadExcel(): void {

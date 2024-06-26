@@ -39,6 +39,33 @@ export class ExcelService {
     reader.readAsBinaryString(dataExcel.file);
   }
 
+  // descargar excel
+  downloadExcel(item: TramiteExcel): void {
+    const test = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,
+    ${item.file}`;
+
+    // Convertir base64 a Blob
+    const byteCharacters = atob(test.split(',')[1]);
+    const byteNumbers = new Array(byteCharacters.length);
+
+    for (let i = 0; i < byteCharacters.length; i++) {
+      byteNumbers[i] = byteCharacters.charCodeAt(i);
+    }
+
+    const byteArray = new Uint8Array(byteNumbers);
+    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+
+    // Crear un enlace y disparar el evento de descarga
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = item.nombre_archivo; // Nombre del archivo
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
+  }
+
   /*loadExcelFromLocalStorage(): XLSX.WorkBook | null {
     const base64String = this.localStorageService.getItem('excelFile');
     if(base64String) {

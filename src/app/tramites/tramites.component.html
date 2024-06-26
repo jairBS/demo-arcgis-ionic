@@ -207,7 +207,7 @@
                         <ion-label class="ion-text-start"> {{ item.nombre_archivo }} </ion-label>
                       </ion-col>
                       <ion-col size="8" class="ion-text-center">
-                        <ion-button color="medium">
+                        <ion-button color="medium" (click)="downloadExcel(item)">
                           <ion-icon name="download"></ion-icon>
                         </ion-button>
                       </ion-col>
