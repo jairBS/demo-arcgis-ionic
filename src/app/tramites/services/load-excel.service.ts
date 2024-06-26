@@ -41,11 +41,11 @@ export class ExcelService {
 
   // descargar excel
   downloadExcel(item: TramiteExcel): void {
-    const test = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,
+    const base = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,
     ${item.file}`;
 
     // Convertir base64 a Blob
-    const byteCharacters = atob(test.split(',')[1]);
+    const byteCharacters = atob(base.split(',')[1]);
     const byteNumbers = new Array(byteCharacters.length);
 
     for (let i = 0; i < byteCharacters.length; i++) {
@@ -58,8 +58,10 @@ export class ExcelService {
     // Crear un enlace y disparar el evento de descarga
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
+
     a.href = url;
-    a.download = item.nombre_archivo; // Nombre del archivo
+    a.download = item.nombre_archivo; // ponerle un nombre al archivo.
+
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
