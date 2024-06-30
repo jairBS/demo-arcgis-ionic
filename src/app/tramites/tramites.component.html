@@ -170,13 +170,19 @@
       <ion-content class="ion-padding">
         <ion-grid>
           <ion-row>
-            <ion-col size="12">
+            <ion-col size="8">
               <ion-input
                 [(ngModel)]="fileInput"
                 type="file"
                 accept=".xlsx,.xls"
                 (change)="onFileSelected($event)"
               ></ion-input>
+            </ion-col>
+
+            <ion-col size="1">
+              <ion-button [disabled]="!fileInput" color="medium" (click)="saveExcel()">
+                <ion-icon name="save"></ion-icon>
+              </ion-button>
             </ion-col>
           </ion-row>
 

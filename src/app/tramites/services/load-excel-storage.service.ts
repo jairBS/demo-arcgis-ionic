@@ -6,7 +6,7 @@ const storageName = 'tramites_excel';
      providedIn: 'root'
    })
 export class ExcelTramitesStorageService {
-  private excelTramites: any;
+  public excelTramites: any;
 
   constructor() {
     const storedTramitesExcel = localStorage.getItem(storageName);

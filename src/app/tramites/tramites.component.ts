@@ -41,6 +41,7 @@ export class TramitesComponent implements OnInit  {
   public listFiles:any;
   public networkStatus: any;
   public idTramite:number = 0;
+  public tramiteExcelFile:any;
 
   async ngOnInit() {
     this.todoList = this.todoListService.getTodoList();
@@ -193,32 +194,40 @@ export class TramitesComponent implements OnInit  {
     this.nameTramite = item.nombre;
 
     if(this.isModalOpenExcel) {
-      this.listFiles = this.excelService
-                        .getRecordsExcel()
-                        .filter((data:any) => data.nombre_tramite === this.nameTramite);
+      this.reloadList();
     }
   }
 
   onFileSelected(event: any) {
     const file: File = event.target.files[0];
     if (!file.name.includes('xlsx') || !file.name.includes('xls')) {
-      // mandar notificacion de que debe de ser un excel
       this.presentAlert('Debe de cargar un archivo con extensión xlsx ó xls','');
       this.fileInput = "";
       return;
     }
 
     // crear objeto con el nombre y el file
-    const tramiteExcel: TramiteExcel = {
+    this.tramiteExcelFile = {
       nombre_archivo: file.name,
       nombre_tramite: this.nameTramite,
       file: file,
     }
+  }
 
-    this.excelService.saveExcelToLocalStorage(tramiteExcel);
-    this.presentAlert('Archivo guardado con éxito','');
-    this.fileInput = "";
+  saveExcel() {
+    if(this.tramiteExcelFile) {
+      this.excelService.saveExcelToLocalStorage(this.tramiteExcelFile);
+      setTimeout(() => {
+        this.presentAlert('Archivo guardado con éxito','');
+        this.fileInput = "";
+        this.reloadList();
+      }, 1000);
+    }
+  }
 
+  reloadList() {
+    this.listFiles = this.excelService.getRecordsExcel()
+                      .filter((data:any) => data.nombre_tramite === this.nameTramite);
   }
 
   downloadExcel(item: any) {
@@ -230,17 +239,5 @@ export class TramitesComponent implements OnInit  {
 
     this.excelService.downloadExcel(dataFile);
   }
-
-
-
-  /*loadExcel(): void {
-    const workbook = this.excelService.loadExcelFromLocalStorage();
-    if(workbook) {
-      console.log("archivo cargado desde local storage", workbook);
-    } else {
-      console.log("no se encontro ningun archivo");
-    }
-  }*/
-
 }
 

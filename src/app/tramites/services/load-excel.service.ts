@@ -9,7 +9,7 @@ import { Tramite, TramiteExcel } from "../interfaces/tramite.interface";
   providedIn: 'root'
 })
 export class ExcelService {
-  constructor(private excelTramitesStorageService: ExcelTramitesStorageService) {
+  constructor(public excelTramitesStorageService: ExcelTramitesStorageService) {
 
   }
 
