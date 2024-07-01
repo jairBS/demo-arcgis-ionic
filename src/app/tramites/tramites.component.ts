@@ -221,7 +221,7 @@ export class TramitesComponent implements OnInit  {
         this.presentAlert('Archivo guardado con éxito','');
         this.fileInput = "";
         this.reloadList();
-      }, 1000);
+      }, 500);
     }
   }
 
@@ -238,6 +238,61 @@ export class TramitesComponent implements OnInit  {
     };
 
     this.excelService.downloadExcel(dataFile);
+  }
+
+  async syncUp() {
+    // revisar la conexion a internet
+    this.networkStatus = await this.checkNetworkService.getCurrentNetworkStatus();
+
+    if(this.networkStatus.connected) {
+      await this.showLoadingFiles();
+    } else {
+      await this.presentAlert(
+        '¡No es posible realizar la sincronización de datos, verifique su conexión a internet!',
+        ''
+      );
+    }
+
+
+  }
+
+  async showLoadingFiles() {
+    const loading = await this.loadingCtrl.create({
+      message: '¡Sincronizando archivos, por favor espere!',
+      duration: 3000,
+    });
+
+    // mostrar loading
+    await loading.present();
+    // esperar a que el loading se termine...
+    await loading.onDidDismiss();
+    // despues mostrar alerta
+    this.presentAlert(
+        '¡Datos sincronizados con éxito!',
+       `Total de datos sincronizados: ${this.listFiles.length} de ${this.listFiles.length}`
+    );
+
+    // obtener todos los registros de los archivos que existen actualmente en el local shorage
+    const tramites_localStorage = this.excelService.getRecordsExcel();
+
+    // filtrar por tramite para sincronizar.
+    const filterFilesByTramite = this.excelService.getRecordsExcel()
+                                  .filter((data:any) => data.nombre_tramite === this.nameTramite);
+
+    // crear un nuevo arreglo solo con los datos que se sincronizaran
+    // los items que no pertenezcan al nombre del tramite se quedaran en el local storage
+    tramites_localStorage.map((itemLocalStorageTramiteExcel, index)=> {
+      filterFilesByTramite.map((filterByTramite) => {
+          if(itemLocalStorageTramiteExcel.nombre_tramite === filterByTramite.nombre_tramite) {
+             tramites_localStorage.splice(index, 1);
+          }
+      })
+  }
+  )
+
+  // servicio para actualizar la data del local storage con el nuevo arreglo
+  this.excelService.updateDataLocalStorageTramitesExcel(tramites_localStorage);
+  this.reloadList();
   }
 }
 

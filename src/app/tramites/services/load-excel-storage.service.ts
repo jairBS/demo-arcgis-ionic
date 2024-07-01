@@ -23,7 +23,12 @@ export class ExcelTramitesStorageService {
     this.excelTramites = [];
   }
 
-  private update() {
+  updateDataTramitesExcel(newDataTramitesExcel:any) {
+    this.excelTramites = [...newDataTramitesExcel ];
+    localStorage.setItem(storageName, JSON.stringify(this.excelTramites));
+  }
+
+  update() {
     localStorage.setItem(storageName, JSON.stringify(this.excelTramites));
     return this.get();
   }

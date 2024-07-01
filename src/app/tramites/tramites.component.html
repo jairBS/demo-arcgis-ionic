@@ -179,9 +179,19 @@
               ></ion-input>
             </ion-col>
 
-            <ion-col size="1">
+            <ion-col size="2">
               <ion-button [disabled]="!fileInput" color="medium" (click)="saveExcel()">
                 <ion-icon name="save"></ion-icon>
+              </ion-button>
+            </ion-col>
+
+            <ion-col size="1">
+              <ion-button
+              color="medium"
+              id="present-alert"
+              [disabled]="listFiles.length === 0"
+              (click)="syncUp()">
+              <ion-icon name="sync"></ion-icon>
               </ion-button>
             </ion-col>
           </ion-row>

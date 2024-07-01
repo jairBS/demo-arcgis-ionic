@@ -17,6 +17,10 @@ export class ExcelService {
     return this.excelTramitesStorageService.get();
   }
 
+  updateDataLocalStorageTramitesExcel(newDataTramitesExcel:any) {
+    return this.excelTramitesStorageService.updateDataTramitesExcel(newDataTramitesExcel);
+  }
+
   saveExcelToLocalStorage(dataExcel: TramiteExcel): void {
     const reader = new FileReader();
 
