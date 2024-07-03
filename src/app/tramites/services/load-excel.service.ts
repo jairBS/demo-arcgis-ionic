@@ -73,7 +73,7 @@ export class ExcelService {
       });
 
       // abrir excel en el dispositivo
-      this.openFile(savedFile.uri);
+      await this.openFile(savedFile.uri);
     } else {
         // Convertir base64 a Blob
       const byteCharacters = atob(base.split(',')[1]);
