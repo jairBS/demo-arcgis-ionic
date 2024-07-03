@@ -16,3 +16,9 @@ export interface TramiteExcel {
   nombre_tramite: string;
   file: File;
 }
+
+export interface TramiteExcelDownload {
+  nombre_archivo: string;
+  nombre_tramite: string;
+  file: string;
+}

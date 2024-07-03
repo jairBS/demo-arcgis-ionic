@@ -8,7 +8,7 @@ import { PhotosService } from './services/photos.service';
 import { ExcelService } from './services/load-excel.service';
 
 // Interfaces.
-import { Tramite, TramiteExcel } from './interfaces/tramite.interface';
+import { Tramite, TramiteExcelDownload } from './interfaces/tramite.interface';
 @Component({
   selector: 'app-form-tramites',
   templateUrl: 'tramites.component.html',
@@ -231,7 +231,7 @@ export class TramitesComponent implements OnInit  {
   }
 
   downloadExcel(item: any) {
-    const dataFile: TramiteExcel = {
+    const dataFile: TramiteExcelDownload = {
       nombre_tramite: item.nombre_tramite,
       nombre_archivo: item.nombre_archivo,
       file: item.fileBinary,

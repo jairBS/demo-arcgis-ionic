@@ -3,13 +3,18 @@ import { Injectable } from "@angular/core";
 
 import * as XLSX from 'xlsx';
 import { ExcelTramitesStorageService } from "./load-excel-storage.service";
-import { Tramite, TramiteExcel } from "../interfaces/tramite.interface";
+import { Tramite, TramiteExcel, TramiteExcelDownload } from "../interfaces/tramite.interface";
+import { Platform } from "@ionic/angular";
+import { Filesystem, Directory } from "@capacitor/filesystem";
+import { FileOpener } from "@capacitor-community/file-opener";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ExcelService {
-  constructor(public excelTramitesStorageService: ExcelTramitesStorageService) {
+  constructor(public excelTramitesStorageService: ExcelTramitesStorageService,
+              private platform: Platform
+  ) {
 
   }
 
@@ -43,33 +48,56 @@ export class ExcelService {
     reader.readAsBinaryString(dataExcel.file);
   }
 
+  async openFile(filePath:string) {
+    try {
+      await FileOpener.open({
+        filePath: filePath,
+        contentType: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+
+      });
+    } catch (error) {
+      console.log("error al abrir el archivo", error);
+    }
+  }
+
   // descargar excel
-  downloadExcel(item: TramiteExcel): void {
+  async downloadExcel(item: TramiteExcelDownload): Promise<void> {
     const base = `data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,
     ${item.file}`;
 
-    // Convertir base64 a Blob
-    const byteCharacters = atob(base.split(',')[1]);
-    const byteNumbers = new Array(byteCharacters.length);
+    if(this.platform.is("hybrid")) {
+      const savedFile = await Filesystem.writeFile({
+        path: item.nombre_archivo,
+        data: item.file,
+        directory: Directory.Documents,
+      });
 
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
+      // abrir excel en el dispositivo
+      this.openFile(savedFile.uri);
+    } else {
+        // Convertir base64 a Blob
+      const byteCharacters = atob(base.split(',')[1]);
+      const byteNumbers = new Array(byteCharacters.length);
 
-    const byteArray = new Uint8Array(byteNumbers);
-    const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
+      }
 
-    // Crear un enlace y disparar el evento de descarga
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
+      const byteArray = new Uint8Array(byteNumbers);
+      const blob = new Blob([byteArray], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
 
-    a.href = url;
-    a.download = item.nombre_archivo; // ponerle un nombre al archivo.
+      // Crear un enlace y disparar el evento de descarga
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
 
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+      a.href = url;
+      a.download = item.nombre_archivo; // ponerle un nombre al archivo.
+
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      window.URL.revokeObjectURL(url);
+      }
   }
 
   /*loadExcelFromLocalStorage(): XLSX.WorkBook | null {
