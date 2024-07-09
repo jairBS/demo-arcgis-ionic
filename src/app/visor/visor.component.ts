@@ -33,6 +33,9 @@ export class VisorComponent implements OnInit {
 
 
   public async ngOnInit()  {
+    // si hay internet el geoJson se quedara igual, si no hay internet tomarlo del geoJsonLocal
+    const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
+
     const position = await Geolocation.getCurrentPosition();
     this.latitude = position.coords.latitude;
     this.longitude = position.coords.longitude;
@@ -42,42 +45,23 @@ export class VisorComponent implements OnInit {
 
     // devuelve el geoJson almacenado del localStorage.
     const geoJsonLocal = this.getGeoJsonLocal(geoJson);
+    const layerLocal = this.createLayerByGeoJson(geoJsonLocal);
 
-      // si hay internet el geoJson se quedara igual, si no hay internet tomarlo del geoJsonLocal
-      const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
+    this.createMap("topo-vector", layer, this.longitude, this.latitude);
+  }
 
+  createMap(baseMap:string,layer:any,lon:number,lat:number) {
+    this.map = new Map({
+      basemap: baseMap,//"topo-vector", // hybrid
+      layers:[layer]
+    });
 
-        // TODO: Configuracion del mapa con sus capas.
-
-        if(networkStatus.connected) {
-          this.map = new Map({
-            basemap: "topo-vector", // hybrid
-            layers:[layer]
-          });
-
-
-
-
-        } else {
-
-          const esriStyles = document.getElementById('container');
-          //console.log("esri styles",   esriStyles?.classList);
-          //esriStyles?.classList.remove('esri-view');
-          this.map = new Map({
-            layers:[geoJsonLocal]
-          });
-        }
-
-        if(this.view) {
-          this.view.destroy();
-        }
-
-        this.view = new MapView({
-          container: "container",
-          map: this.map,
-          zoom: 5,
-          center: [this.longitude, this.latitude],
-        })
+    this.view = new MapView({
+      container: "container",
+      map: this.map,
+      zoom: 5,
+      center:  [lon, lat],
+    });
   }
 
 
@@ -131,6 +115,7 @@ export class VisorComponent implements OnInit {
       return resultQuery;
   }
 
+
   createLayerByGeoJson(geoJsonLayer:any) {
     // TODO: Generar capas del GEOJson.json para mostrarlas en el mapa base.
     const blob = new Blob([JSON.stringify(geoJsonLayer)],{
@@ -145,7 +130,5 @@ export class VisorComponent implements OnInit {
 
     return layer;
   }
-
-
 
 }
