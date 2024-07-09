@@ -13,12 +13,12 @@ import { HeaderModule } from './components/header/header.module';
 import { TodoListService } from './tramites/services/todo-list.service';
 import { TodoListStorageService } from './tramites/services/todo-list-storage.service';
 import { PhotosService } from './tramites/services/photos.service';
-import { geoJsonLayersService } from './visor/services/layer.service';
-import { geoJsonLayerStorageService } from './visor/services/layer-storage.service';
+import { geoJsonService } from './visor/services/geojson.service';
+import { geoJsonStorageService } from './visor/services/geojson-storage.service';
 @NgModule({
   declarations: [AppComponent],
   imports: [BrowserModule, IonicModule.forRoot(), AppRoutingModule, MenuModule, HeaderModule, FooterModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, TodoListService, TodoListStorageService, PhotosService, geoJsonLayersService, geoJsonLayerStorageService],
+  providers: [{ provide: RouteReuseStrategy, useClass: IonicRouteStrategy }, TodoListService, TodoListStorageService, PhotosService, geoJsonService, geoJsonStorageService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

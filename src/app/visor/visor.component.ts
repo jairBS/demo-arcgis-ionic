@@ -10,7 +10,7 @@ import * as query from "@arcgis/core/rest/query.js";
 // import * as data from "./GEOJson.json";
 
 import { CheckNetworkService } from '../tramites/services/check-network.service';
-import { geoJsonLayersService } from './services/layer.service';
+import { geoJsonService } from './services/geojson.service';
 
 @Component({
   selector: 'app-visor',
@@ -23,7 +23,7 @@ export class VisorComponent implements OnInit {
 
   constructor(
     private checkNetworkService: CheckNetworkService,
-    private geoJsonlayersService: geoJsonLayersService
+    private geoJsonService: geoJsonService
   ) { }
 
   private latitude: number = 0;
@@ -33,15 +33,15 @@ export class VisorComponent implements OnInit {
 
 
   public async ngOnInit()  {
-    // TODO: si ya existe una capa en local?
-      const position = await Geolocation.getCurrentPosition();
-      this.latitude = position.coords.latitude;
-      this.longitude = position.coords.longitude;
+    const position = await Geolocation.getCurrentPosition();
+    this.latitude = position.coords.latitude;
+    this.longitude = position.coords.longitude;
 
-      const geoJson =  await this.createGeoJsonByQuery();
-      const layer = this.createLayerByGeoJson(geoJson);
+    const geoJson =  await this.createGeoJsonByQuery();
+    const layer = this.createLayerByGeoJson(geoJson);
 
-      const geoJsonLocal = this.getLayerByGeoJsonLocal(geoJson);
+    // devuelve el geoJson almacenado del localStorage.
+    const geoJsonLocal = this.getGeoJsonLocal(geoJson);
 
       // si hay internet el geoJson se quedara igual, si no hay internet tomarlo del geoJsonLocal
       const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
@@ -81,10 +81,10 @@ export class VisorComponent implements OnInit {
   }
 
 
-  getLayerByGeoJsonLocal(geoJson:any) {
-    this.geoJsonlayersService.deletelocalStorageLayers();
-    this.geoJsonlayersService.addLayer(geoJson);
-    const [geoJsonLocal] = this.geoJsonlayersService.getLayers();
+  getGeoJsonLocal(geoJson:any) {
+    this.geoJsonService.deletelocalStorageGeoJson();
+    this.geoJsonService.addGeoJson(geoJson);
+    const [geoJsonLocal] = this.geoJsonService.getGeoJson();
     return geoJsonLocal;
   }
 
