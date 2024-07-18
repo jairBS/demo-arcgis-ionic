@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AlertController, LoadingController } from '@ionic/angular';
 import Map from '@arcgis/core/Map';
 import MapView from '@arcgis/core/views/MapView';
 import { Geolocation } from '@capacitor/geolocation';
@@ -23,38 +24,89 @@ export class VisorComponent implements OnInit {
 
   constructor(
     private checkNetworkService: CheckNetworkService,
-    private geoJsonService: geoJsonService
+    private geoJsonService: geoJsonService,
+    private loadingController: LoadingController,
+    private alertController: AlertController,
   ) { }
 
   private latitude: number = 0;
   private longitude: number = 0;
   public map:any;
   public view:any;
+  public layer:any;
+  public geoJsonLocal:any;
 
+  async presentAlert(header: string, message: string) {
+    const alert = await this.alertController.create({
+      header: header,
+      message: message,
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  async showLoading(message:string) {
+    const loading = await this.loadingController.create({
+      message: message,
+      duration: 3000,
+    });
+
+    // mostrar loading
+    await loading.present();
+    // esperar a que el loading se termine...
+    await loading.onDidDismiss();
+  }
 
   public async ngOnInit()  {
     // si hay internet el geoJson se quedara igual, si no hay internet tomarlo del geoJsonLocal
     const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
 
-    const position = await Geolocation.getCurrentPosition();
-    this.latitude = position.coords.latitude;
-    this.longitude = position.coords.longitude;
+    if(networkStatus.connected) {
+      const position = await Geolocation.getCurrentPosition();
+      this.latitude = position.coords.latitude;
+      this.longitude = position.coords.longitude;
 
-    const geoJson =  await this.createGeoJsonByQuery();
-    const layer = this.createLayerByGeoJson(geoJson);
+      const geoJson =  await this.createGeoJsonByQuery();
 
-    // devuelve el geoJson almacenado del localStorage.
-    const geoJsonLocal = this.getGeoJsonLocal(geoJson);
-    const layerLocal = this.createLayerByGeoJson(geoJsonLocal);
+      if(geoJson.type === "error") {
+        this.presentAlert(geoJson.error?.message,"");
 
-    this.createMap("topo-vector", layer, this.longitude, this.latitude);
+      } else {
+        this.layer = this.createLayerByGeoJson(geoJson);
+
+        await this.showLoading('¡Guardando capa en almacenamiento local, por favor espere!');
+        this.getGeoJsonLocal(geoJson);
+        this.presentAlert('¡Capa almacenada con éxito!',"");
+
+        this.createMap("topo-vector", this.layer, this.longitude, this.latitude);
+      }
+
+    } else {
+      // OFFLINE
+      await this.showLoading('¡Obteniendo capa de almacenamiento local, por favor espere!');
+      const [geoJsonLocal] = this.geoJsonService.getGeoJson();
+
+      this.latitude = 20.070662;
+      this.longitude = -98.7836686;
+
+      this.layer = this.createLayerByGeoJson(geoJsonLocal);
+      this.createMap("", this.layer, this.longitude, this.latitude);
+    }
   }
 
-  createMap(baseMap:string,layer:any,lon:number,lat:number) {
-    this.map = new Map({
-      basemap: baseMap,//"topo-vector", // hybrid
-      layers:[layer]
-    });
+  createMap(baseMap:string = "",layer:any,lon:number,lat:number) {
+    if(baseMap === "") {
+      this.map = new Map({
+        layers:[layer]
+      });
+    } else {
+      this.map = new Map({
+        basemap: baseMap,//"topo-vector", // hybrid
+        layers:[layer]
+      });
+    }
+
 
     this.view = new MapView({
       container: "container",
