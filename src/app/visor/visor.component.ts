@@ -124,14 +124,6 @@ export class VisorComponent implements OnInit {
     return geoJsonLocal;
   }
 
-  generateFormData() {
-    const formData = new FormData();
-
-
-
-  }
-
-
   async createGeoJsonByQuery() {
     /* TODO: Utilizar la api de arcgis para generar el GeoJson,
     con la url de monitoreo sigsa, crear el query como en la interfaz
