@@ -167,6 +167,7 @@ export class VisorComponent implements OnInit {
   }
 
 
+
   createLayerByGeoJson(geoJsonLayer:any) {
     // TODO: Generar capas del GEOJson.json para mostrarlas en el mapa base.
     const blob = new Blob([JSON.stringify(geoJsonLayer)],{
