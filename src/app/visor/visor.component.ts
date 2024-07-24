@@ -13,6 +13,8 @@ import * as query from "@arcgis/core/rest/query.js";
 import { CheckNetworkService } from '../tramites/services/check-network.service';
 import { geoJsonService } from './services/geojson.service';
 
+import esriId from "@arcgis/core/identity/IdentityManager.js";
+
 @Component({
   selector: 'app-visor',
   templateUrl: 'visor.component.html',
@@ -63,6 +65,8 @@ export class VisorComponent implements OnInit {
     const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
 
     if(networkStatus.connected) {
+      this.generateToken();
+
       const position = await Geolocation.getCurrentPosition();
       this.latitude = position.coords.latitude;
       this.longitude = position.coords.longitude;
@@ -122,6 +126,39 @@ export class VisorComponent implements OnInit {
     this.geoJsonService.addGeoJson(geoJson);
     const [geoJsonLocal] = this.geoJsonService.getGeoJson();
     return geoJsonLocal;
+  }
+
+  generateToken() {
+    const portalUrl:string = "https://monitoreopmx.sigsa.info/portal/sharing/rest/generateToken";
+
+    const formData = new FormData();
+
+    formData.append("username", "villapmx");
+    formData.append("password", "villa.2020");
+    formData.append("referer", "http://localhost:8100");
+    formData.append("expiration", "60");
+    formData.append("f", "json");
+
+    this.getToken(portalUrl, formData)
+      .then(data => {
+        esriId.registerToken({
+          token: data.token,
+          server: portalUrl,
+          ssl: true,
+        });
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  async getToken(url:string, data:FormData) {
+    const response = await fetch(url,{
+      method: "POST",
+      body: data,
+    });
+
+    return response.json();
   }
 
   async createGeoJsonByQuery() {
