@@ -14,7 +14,7 @@ import { CheckNetworkService } from '../tramites/services/check-network.service'
 import { geoJsonService } from './services/geojson.service';
 
 import esriId from "@arcgis/core/identity/IdentityManager.js";
-
+import { Platform } from '@ionic/angular';
 @Component({
   selector: 'app-visor',
   templateUrl: 'visor.component.html',
@@ -29,6 +29,7 @@ export class VisorComponent implements OnInit {
     private geoJsonService: geoJsonService,
     private loadingController: LoadingController,
     private alertController: AlertController,
+    private platform: Platform,
   ) { }
 
   private latitude: number = 0;
@@ -135,7 +136,13 @@ export class VisorComponent implements OnInit {
 
     formData.append("username", "villapmx");
     formData.append("password", "villa.2020");
-    formData.append("referer", "http://localhost:8100");
+
+    if(this.platform.is("hybrid")) {
+      formData.append("referer", "capacitor://localhost");
+    } else {
+      formData.append("referer", "http://localhost:8100");
+    }
+
     formData.append("expiration", "60");
     formData.append("f", "json");
 
@@ -170,39 +177,30 @@ export class VisorComponent implements OnInit {
 
     let resultQuery:any;
 
-    await query.executeQueryJSON(queryUrl,
-      {
+    try {
+      const results = await query.executeQueryJSON(queryUrl, {
         where: "1=1",
         outFields: ["*"],
         returnGeometry: true,
-      }).then(function(results:any) {
-
-        const features = [];
-        const feature = results.features.map((feature:any) => {
-
-          return {
-            type: "Feature",
-            id: feature.attributes.FID,
-            geometry: {
-              type: "Polygon",
-              coordinates: feature.geometry.rings,
-            },
-            properties: feature.attributes,
-            };
-
-        });
-
-      features.push(feature);
-      resultQuery =  { type: "FeatureCollection", features: features[0] };
-
-      }, function(error){
-          console.error(error);
-          resultQuery = { type: "error", error: error }
       });
 
-      return resultQuery;
-  }
+      const features = results.features.map((feature: any) => ({
+        type: "Feature",
+        id: feature.attributes.FID,
+        geometry: {
+          type: "Polygon",
+          coordinates: feature.geometry.rings,
+        },
+        properties: feature.attributes,
+      }));
 
+      resultQuery = { type: "FeatureCollection", features: features };
+    } catch (error) {
+      resultQuery = { type: "error", error: error };
+    }
+
+    return resultQuery;
+  }
 
 
   createLayerByGeoJson(geoJsonLayer:any) {
