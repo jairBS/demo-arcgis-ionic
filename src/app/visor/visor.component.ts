@@ -138,7 +138,7 @@ export class VisorComponent implements OnInit {
     formData.append("password", "villa.2020");
 
     if(this.platform.is("hybrid")) {
-      formData.append("referer", "capacitor://localhost");
+      formData.append("referer", "https://localhost");
     } else {
       formData.append("referer", "http://localhost:8100");
     }
