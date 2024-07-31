@@ -33,7 +33,8 @@ export class VisorComponent implements OnInit {
     private alertController: AlertController,
     private platform: Platform,
   ) {
-    this.test();
+    console.log("constructor");
+    this.switchOnlineOrOfflineMode();
   }
 
   private latitude: number = 0;
@@ -43,13 +44,10 @@ export class VisorComponent implements OnInit {
   public layer:any;
   public geoJsonLocal:any;
 
-  test() {
+  switchOnlineOrOfflineMode() {
     Network.addListener('networkStatusChange', status => {
       console.log('Network status changed desde visor', status);
-      setTimeout(() => {
-        this.ngOnInit();
-      }, 500);
-
+       this.ngOnInit(status.connected);
     });
   }
 
@@ -75,11 +73,12 @@ export class VisorComponent implements OnInit {
     await loading.onDidDismiss();
   }
 
-  public async ngOnInit()  {
+  public async ngOnInit(conected:boolean = true)  {
     // si hay internet el geoJson se quedara igual, si no hay internet tomarlo del geoJsonLocal
     const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
 
-    if(networkStatus.connected) {
+    if(conected) {
+      console.log("ENTRA A CONECTADO");
       this.generateToken();
 
       const position = await Geolocation.getCurrentPosition();
@@ -102,6 +101,7 @@ export class VisorComponent implements OnInit {
       }
 
     } else {
+      console.log("ENTRA A  NO CONECTADO");
       // OFFLINE
       await this.showLoading('¡Obteniendo capa de almacenamiento local, por favor espere!');
       const [geoJsonLocal] = this.geoJsonService.getGeoJson();
