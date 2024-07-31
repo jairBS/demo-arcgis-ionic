@@ -15,6 +15,8 @@ import { geoJsonService } from './services/geojson.service';
 
 import esriId from "@arcgis/core/identity/IdentityManager.js";
 import { Platform } from '@ionic/angular';
+
+import { Network } from '@capacitor/network';
 @Component({
   selector: 'app-visor',
   templateUrl: 'visor.component.html',
@@ -30,7 +32,9 @@ export class VisorComponent implements OnInit {
     private loadingController: LoadingController,
     private alertController: AlertController,
     private platform: Platform,
-  ) { }
+  ) {
+    this.test();
+  }
 
   private latitude: number = 0;
   private longitude: number = 0;
@@ -38,6 +42,16 @@ export class VisorComponent implements OnInit {
   public view:any;
   public layer:any;
   public geoJsonLocal:any;
+
+  test() {
+    Network.addListener('networkStatusChange', status => {
+      console.log('Network status changed desde visor', status);
+      setTimeout(() => {
+        this.ngOnInit();
+      }, 500);
+
+    });
+  }
 
   async presentAlert(header: string, message: string) {
     const alert = await this.alertController.create({
