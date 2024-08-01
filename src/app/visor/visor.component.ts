@@ -43,10 +43,12 @@ export class VisorComponent implements OnInit {
   public view:any;
   public layer:any;
   public geoJsonLocal:any;
+  public msgSaveLayer:string = "¡Guardando capa en almacenamiento local, por favor espere!";
 
   switchOnlineOrOfflineMode() {
     Network.addListener('networkStatusChange', status => {
       console.log('Network status changed desde visor', status);
+      console.log("el status conecteded", status.connected);
        this.ngOnInit(status.connected);
     });
   }
@@ -74,42 +76,54 @@ export class VisorComponent implements OnInit {
   }
 
   public async ngOnInit(conected:boolean = true)  {
-    // si hay internet el geoJson se quedara igual, si no hay internet tomarlo del geoJsonLocal
     const networkStatus =  await this.checkNetworkService.getCurrentNetworkStatus();
 
-    if(conected) {
-      console.log("ENTRA A CONECTADO");
-      this.generateToken();
-
+    if(conected && networkStatus.connected) {
+      console.log("online");
       const position = await Geolocation.getCurrentPosition();
       this.latitude = position.coords.latitude;
       this.longitude = position.coords.longitude;
+      console.log("latitude: ", this.latitude);
+      console.log("longitud: ", this.longitude);
+
+      this.generateToken();
 
       const geoJson =  await this.createGeoJsonByQuery();
+      console.log("geo json: ", geoJson);
 
       if(geoJson.type === "error") {
-        this.presentAlert(geoJson.error?.message,"");
-
+        this.presentAlert(geoJson.error?.message,"Error al crear GeoJson");
       } else {
-        this.layer = this.createLayerByGeoJson(geoJson);
-
-        await this.showLoading('¡Guardando capa en almacenamiento local, por favor espere!');
-        this.getGeoJsonLocal(geoJson);
+        /* muestra mensaje para guardar capa,
+        en realidad guarda el geojson para posteriormente crear la capa. */
+        await this.showLoading(this.msgSaveLayer);
+        this.saveGeoJsonLocal(geoJson);
         this.presentAlert('¡Capa almacenada con éxito!',"");
 
+        // crear la capa para la creacion del mapa.
+        this.layer = this.createLayerByGeoJson(geoJson);
+
+        // crear el mapa
         this.createMap("topo-vector", this.layer, this.longitude, this.latitude);
       }
 
     } else {
-      console.log("ENTRA A  NO CONECTADO");
-      // OFFLINE
-      await this.showLoading('¡Obteniendo capa de almacenamiento local, por favor espere!');
-      const [geoJsonLocal] = this.geoJsonService.getGeoJson();
+      console.log("offline");
 
       this.latitude = 20.070662;
       this.longitude = -98.7836686;
+      console.log("latitude: ", this.latitude);
+      console.log("longitude: ", this.longitude);
 
+      // en realidad obtiene el geojson de almacenamiento local para posteriormente crear capa.
+      await this.showLoading('¡Obteniendo capa de almacenamiento local, por favor espere!');
+      const [geoJsonLocal] = this.geoJsonService.getGeoJson();
+      console.log("obtencion de geojson local: ", geoJsonLocal);
+
+      // TODO: SE NECESITA DE INTERNET PARA CREAR LAYER?
       this.layer = this.createLayerByGeoJson(geoJsonLocal);
+      console.log("layer asignada", this.layer);
+
       this.createMap("", this.layer, this.longitude, this.latitude);
     }
   }
@@ -135,27 +149,39 @@ export class VisorComponent implements OnInit {
     });
   }
 
+  saveGeoJsonLocal(geoJson:any) {
+    // eliminar los geojson que se tienen guardados
+    this.geoJsonService.deletelocalStorageGeoJson();
+    this.geoJsonService.addGeoJson(geoJson);
+    console.log("geojson almacenado en localstorage");
+  }
 
-  getGeoJsonLocal(geoJson:any) {
+
+  /* getGeoJsonLocal(geoJson:any) {
     this.geoJsonService.deletelocalStorageGeoJson();
     this.geoJsonService.addGeoJson(geoJson);
     const [geoJsonLocal] = this.geoJsonService.getGeoJson();
     return geoJsonLocal;
-  }
+  } */
 
   generateToken() {
+    console.log("1 - generate token");
     const portalUrl:string = "https://monitoreopmx.sigsa.info/portal/sharing/rest/generateToken";
 
     const formData = new FormData();
+    let referer:string = "";
 
     formData.append("username", "villapmx");
     formData.append("password", "villa.2020");
+    referer = this.platform.is("hybrid") ? "https://localhost" : "http://localhost:8100";
+    formData.append("referer", referer);
 
-    if(this.platform.is("hybrid")) {
+    /* if(this.platform.is("hybrid")) {
       formData.append("referer", "https://localhost");
+
     } else {
       formData.append("referer", "http://localhost:8100");
-    }
+    } */
 
     formData.append("expiration", "60");
     formData.append("f", "json");
@@ -174,6 +200,7 @@ export class VisorComponent implements OnInit {
   }
 
   async getToken(url:string, data:FormData) {
+    console.log("2 - get token");
     const response = await fetch(url,{
       method: "POST",
       body: data,
@@ -218,6 +245,7 @@ export class VisorComponent implements OnInit {
 
 
   createLayerByGeoJson(geoJsonLayer:any) {
+    console.log("creando layer");
     // TODO: Generar capas del GEOJson.json para mostrarlas en el mapa base.
     const blob = new Blob([JSON.stringify(geoJsonLayer)],{
         type: "application/json"
@@ -228,6 +256,8 @@ export class VisorComponent implements OnInit {
     const layer = new GeoJSONLayer({
       url
     });
+
+    console.log("layer resultante", layer);
 
     return layer;
   }
